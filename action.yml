@@ -9,8 +9,8 @@ inputs:
   gpg-secret-key:
     description: "GPG secret key"
     required: true
-  signing-passphrase:
-    description: "Signing passphrase"
+  gpg-passphrase:
+    description: "GPG passphrase"
     required: true
   ossrh-username:
     description: "OSSRH username"
@@ -83,7 +83,7 @@ runs:
       env:
         MAVEN_USERNAME: ${{ inputs.ossrh-username }}
         MAVEN_PASSWORD: ${{ inputs.ossrh-password }}
-        MAVEN_GPG_PASSPHRASE: ${{ inputs.signing-passphrase }}
+        MAVEN_GPG_PASSPHRASE: ${{ inputs.gpg-passphrase }}
 
     - name: Create Tag
       shell: bash
