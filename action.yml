@@ -82,7 +82,6 @@ runs:
         git push origin "release-$RELEASE_VERSION"
 
     - name: Build Release with Maven
-      timeout-minutes: 120
       run: |
         mvn -Prelease clean package source:jar javadoc:jar gpg:sign deploy site site:stage
       env:
