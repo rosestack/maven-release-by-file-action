@@ -32,6 +32,7 @@ runs:
       with:
         github-token: ${{ inputs.github-token }}
         metadata-file-path: '.github/project.yml'
+        local-file: true
 
     - name: Set environment variables
       shell: bash
