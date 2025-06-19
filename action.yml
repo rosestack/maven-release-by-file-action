@@ -21,8 +21,7 @@ inputs:
   github-token:
     description: "GitHub token"
     required: true
-
-
+    
 runs:
   using: 'composite'
 
@@ -75,15 +74,16 @@ runs:
       run: |
         git checkout -b "release-$RELEASE_VERSION"
 
-        mvn versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${RELEASE_VERSION}
+        mvn -B -U -ntp versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${RELEASE_VERSION}
         sed -i "s|<version>[0-9]\+\.[0-9]\+\.[0-9]\+</version>|<version>${RELEASE_VERSION}</version>|g" README.md
         git commit --no-verify -a -m "[CI Skip] Releasing branch ${RELEASE_VERSION}"
 
         git push origin "release-$RELEASE_VERSION"
 
     - name: Build Release with Maven
+      shell: bash
       run: |
-        mvn -Prelease clean package source:jar javadoc:jar gpg:sign deploy site site:stage
+        mvn -B -U -ntp -Prelease clean package source:jar javadoc:jar gpg:sign deploy site site:stage
       env:
         MAVEN_USERNAME: ${{ inputs.ossrh-username }}
         MAVEN_PASSWORD: ${{ inputs.ossrh-password }}
@@ -102,6 +102,7 @@ runs:
         publish_dir: ./target/staging
 
     - name: Create GitHub Release
+      shell: bash
       run: |
         gh release create v${RELEASE_VERSION} --generate-notes target/*.asc target/*.jar target/*.pom
       env:
@@ -110,7 +111,7 @@ runs:
     - name: Set Next Version
       shell: bash
       run: |
-        mvn versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${NEXT_VERSION}
+        mvn -B -U -ntp versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${NEXT_VERSION}
         git commit --no-verify -a -m "[CI Skip] Next version v${NEXT_VERSION}"
         git checkout $GITHUB_REF_NAME
         git branch -D "release-$RELEASE_VERSION"
