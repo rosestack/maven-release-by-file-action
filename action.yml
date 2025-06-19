@@ -36,7 +36,7 @@ runs:
     - name: Set environment variables
       shell: bash
       run: |
-        echo "RELEASE_VERSION=${{ steps.metadata.outputs.release-version }}" >> $GITHUB_ENV
+        echo "RELEASE_VERSION=${{ steps.metadata.outputs.current-version }}" >> $GITHUB_ENV
         echo "NEXT_VERSION=${{ steps.metadata.outputs.next-version }}" >> $GITHUB_ENV
 
     - name: Validate release version
