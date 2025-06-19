@@ -73,13 +73,18 @@ runs:
     - name: Set Release version
       shell: bash
       run: |
+        git checkout -b "release-$RELEASE_VERSION"
+
         mvn versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${RELEASE_VERSION}
         sed -i "s|<version>[0-9]\+\.[0-9]\+\.[0-9]\+</version>|<version>${RELEASE_VERSION}</version>|g" README.md
-        git commit --no-verify -a -m "[CI Skip] Releasing ${RELEASE_VERSION}"
+        git commit --no-verify -a -m "[CI Skip] Releasing branch ${RELEASE_VERSION}"
 
-    - name: Publish to Central
-      shell: bash
-      run: mvn -DskipTests -Prelease deploy
+        git push origin "release-$RELEASE_VERSION"
+
+    - name: Build Release with Maven
+      timeout-minutes: 120
+      run: |
+        mvn -Prelease clean package source:jar javadoc:jar gpg:sign deploy site site:stage
       env:
         MAVEN_USERNAME: ${{ inputs.ossrh-username }}
         MAVEN_PASSWORD: ${{ inputs.ossrh-password }}
@@ -89,29 +94,31 @@ runs:
       shell: bash
       run: |
         git tag -a "v${RELEASE_VERSION}" -m "Release v${RELEASE_VERSION}"
+        git push --tags
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ inputs.github-token }}
+        publish_dir: ./target/staging
+
+    - name: Create GitHub Release
+      run: |
+        gh release create v${RELEASE_VERSION} --generate-notes target/*.asc target/*.jar target/*.pom
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
 
     - name: Set Next Version
       shell: bash
       run: |
         mvn versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${NEXT_VERSION}
         git commit --no-verify -a -m "[CI Skip] Next version v${NEXT_VERSION}"
-
-    - name: Push changes
-      shell: bash
-      run: |
-        git push origin $(git rev-parse --abbrev-ref HEAD)
-        git push --tags
-
-    - name: Create Release
-      shell: bash
-      run: |
-        gh release create v${RELEASE_VERSION} --generate-notes
-      env:
-        GITHUB_TOKEN: ${{ inputs.github-token }}
-
+        git checkout $GITHUB_REF_NAME
+        git branch -D "release-$RELEASE_VERSION"
+          
     - name: Release Milestone
       uses: rosestack/milestone-release-action@main
       with:
         github-token: ${{ inputs.github-token }}
-        milestone-title: ${{ steps.metadata.outputs.release-version }}
-        milestone-next: ${{ steps.metadata.outputs.next-version }}
+        milestone-title: ${{ env.RELEASE_VERSION }}
+        milestone-next: ${{ env.NEXT_VERSION }}
