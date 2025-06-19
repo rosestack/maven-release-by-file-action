@@ -37,11 +37,11 @@ runs:
     - name: Set environment variables
       shell: bash
       run: |
-        echo "CURRENT_VERSION=${{ steps.metadata.outputs.current-version }}" >> $GITHUB_ENV
+        echo "RELEASE_VERSION=${{ steps.metadata.outputs.release-version }}" >> $GITHUB_ENV
         echo "NEXT_VERSION=${{ steps.metadata.outputs.next-version }}" >> $GITHUB_ENV
 
-    - name: Validate current version
-      if: contains(env.CURRENT_VERSION, 'SNAPSHOT')
+    - name: Validate release version
+      if: contains(env.RELEASE_VERSION, 'SNAPSHOT')
       shell: bash  
       run: |
         echo '::error::Cannot release a SNAPSHOT version.'
@@ -73,9 +73,9 @@ runs:
     - name: Set Release version
       shell: bash
       run: |
-        mvn versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${CURRENT_VERSION}
-        sed -i "s|<version>[0-9]\+\.[0-9]\+\.[0-9]\+</version>|<version>${CURRENT_VERSION}</version>|g" README.md
-        git commit --no-verify -a -m "[CI Skip] Releasing ${CURRENT_VERSION}"
+        mvn versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${RELEASE_VERSION}
+        sed -i "s|<version>[0-9]\+\.[0-9]\+\.[0-9]\+</version>|<version>${RELEASE_VERSION}</version>|g" README.md
+        git commit --no-verify -a -m "[CI Skip] Releasing ${RELEASE_VERSION}"
 
     - name: Publish to Central
       shell: bash
@@ -88,7 +88,7 @@ runs:
     - name: Create Tag
       shell: bash
       run: |
-        git tag -a "v${CURRENT_VERSION}" -m "Release v${CURRENT_VERSION}"
+        git tag -a "v${RELEASE_VERSION}" -m "Release v${RELEASE_VERSION}"
 
     - name: Set Next Version
       shell: bash
@@ -105,7 +105,7 @@ runs:
     - name: Create Release
       shell: bash
       run: |
-        gh release create v${CURRENT_VERSION} --generate-notes
+        gh release create v${RELEASE_VERSION} --generate-notes
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
 
@@ -113,5 +113,5 @@ runs:
       uses: rosestack/milestone-release-action@main
       with:
         github-token: ${{ inputs.github-token }}
-        milestone-title: ${{ steps.metadata.outputs.current-version }}
+        milestone-title: ${{ steps.metadata.outputs.release-version }}
         milestone-next: ${{ steps.metadata.outputs.next-version }}
