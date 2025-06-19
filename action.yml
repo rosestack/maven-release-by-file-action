@@ -1,6 +1,12 @@
 name: 'Maven Release by File Action'
 description: 'Complete environment configuration for Maven Release by File Action'
 
+##
+## Automates the release process
+## 1. Edit `.github/project.yml`
+## 2. Create PR, merge PR
+##
+
 branding:
   icon: 'settings'
   color: 'green'
