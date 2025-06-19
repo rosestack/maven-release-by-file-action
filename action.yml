@@ -27,7 +27,7 @@ runs:
 
   steps:
     - name: Retrieve Project Metadata
-      uses: radcortez/project-metadata-action@main
+      uses: radcortez/project-metadata-action@1.2
       id: metadata
       with:
         github-token: ${{ inputs.github-token }}
