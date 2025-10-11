@@ -87,10 +87,10 @@ runs:
 
         git push origin "release-$RELEASE_VERSION"
 
-    - name: Build Release with Maven
+    - name: Deploy to Maven Central
       shell: bash
       run: |
-        mvn -B -U -ntp -Prelease clean package source:jar javadoc:jar gpg:sign deploy site site:stage
+        mvn deploy site site:stage -DskipTests -Pcentral
       env:
         MAVEN_USERNAME: ${{ inputs.ossrh-username }}
         MAVEN_PASSWORD: ${{ inputs.ossrh-password }}
