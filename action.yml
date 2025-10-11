@@ -28,9 +28,6 @@ inputs:
   github-token:
     description: "GitHub token"
     required: true
-
-env:
-  MAVEN_ARGS: -ntp -U -B
     
 runs:
   using: 'composite'
@@ -84,7 +81,7 @@ runs:
       run: |
         git checkout -b "release-$RELEASE_VERSION"
 
-        mvn -B -U -ntp versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${RELEASE_VERSION}
+        mvn versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${RELEASE_VERSION}
         sed -i "s|<version>[0-9]\+\.[0-9]\+\.[0-9]\+</version>|<version>${RELEASE_VERSION}</version>|g" README.md
         git commit --no-verify -a -m "[CI Skip] Releasing branch ${RELEASE_VERSION}"
 
@@ -93,7 +90,7 @@ runs:
     - name: Deploy to Maven Central
       shell: bash
       run: |
-        mvn deploy site site:stage -DskipTests -Pcentral
+        mvn -B -U -ntp deploy site site:stage -DskipTests -Pcentral
       env:
         MAVEN_USERNAME: ${{ inputs.ossrh-username }}
         MAVEN_PASSWORD: ${{ inputs.ossrh-password }}
