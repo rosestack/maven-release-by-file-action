@@ -122,7 +122,6 @@ runs:
         git checkout main
         git pull origin main
         git merge "$RELEASE_VERSION"
-        git commit --no-verify -a -m "[CI Skip] Merge ${RELEASE_VERSION} to main"
         git push origin main 
             
     - name: Release Milestone
