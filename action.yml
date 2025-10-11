@@ -6,7 +6,7 @@ description: 'Complete environment configuration for Maven Release by File Actio
 ## 1. Create new branch
 ## 2. Edit `.github/project.yml`
 ## 3. Create PR, merge PR
-##
+## 4. trigger this action: create release branch, create tag and release, set next version and merge to main, Release Milestone
 
 branding:
   icon: 'settings'
@@ -94,24 +94,20 @@ runs:
         MAVEN_PASSWORD: ${{ inputs.ossrh-password }}
         MAVEN_GPG_PASSPHRASE: ${{ inputs.gpg-passphrase }}
 
-    - name: Create Release Tag
+    - name: Create Tag and Release
       shell: bash
       run: |
         git tag -a "v${RELEASE_VERSION}" -m "Release v${RELEASE_VERSION}"
         git push --tags
+        gh release create v${RELEASE_VERSION} --generate-notes target/*.asc target/*.jar target/*.pom
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ inputs.github-token }}
         publish_dir: ./target/staging
-
-    - name: Create GitHub Release
-      shell: bash
-      run: |
-        gh release create v${RELEASE_VERSION} --generate-notes target/*.asc target/*.jar target/*.pom
-      env:
-        GITHUB_TOKEN: ${{ inputs.github-token }}
 
     - name: Set Next Version for main branch
       shell: bash
