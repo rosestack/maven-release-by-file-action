@@ -85,7 +85,7 @@ runs:
         sed -i "s|<version>[0-9]\+\.[0-9]\+\.[0-9]\+</version>|<version>${RELEASE_VERSION}</version>|g" README.md
         git commit --no-verify -a -m "[CI Skip] Releasing branch ${RELEASE_VERSION}"
 
-        git push origin "release-$RELEASE_VERSION"
+        git push origin "$RELEASE_VERSION"
 
     - name: Deploy to Maven Central
       shell: bash
@@ -118,10 +118,10 @@ runs:
     - name: Set Next Version
       shell: bash
       run: |
-        mvn -B -U -ntp versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${NEXT_VERSION}
+        mvn versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${NEXT_VERSION}
         git commit --no-verify -a -m "[CI Skip] Next version v${NEXT_VERSION}"
         git checkout $GITHUB_REF_NAME
-        git branch -D "release-$RELEASE_VERSION"
+        git branch -D "$RELEASE_VERSION"
           
     - name: Release Milestone
       uses: rosestack/milestone-release-action@main
