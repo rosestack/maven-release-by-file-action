@@ -76,15 +76,13 @@ runs:
         git config --global user.name "github-actions"
         git config --global user.email "github-actions@users.noreply.github.com"
 
-    - name: Set Release version
+    - name: Create Release branch
       shell: bash
       run: |
-        git checkout -b "release-$RELEASE_VERSION"
-
-        mvn versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${RELEASE_VERSION}
+        git checkout -b "$RELEASE_VERSION"
+        mvn -B -U -ntp versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${RELEASE_VERSION}
         sed -i "s|<version>[0-9]\+\.[0-9]\+\.[0-9]\+</version>|<version>${RELEASE_VERSION}</version>|g" README.md
         git commit --no-verify -a -m "[CI Skip] Releasing branch ${RELEASE_VERSION}"
-
         git push origin "$RELEASE_VERSION"
 
     - name: Deploy to Maven Central
@@ -96,7 +94,7 @@ runs:
         MAVEN_PASSWORD: ${{ inputs.ossrh-password }}
         MAVEN_GPG_PASSPHRASE: ${{ inputs.gpg-passphrase }}
 
-    - name: Create Tag
+    - name: Create Release Tag
       shell: bash
       run: |
         git tag -a "v${RELEASE_VERSION}" -m "Release v${RELEASE_VERSION}"
@@ -115,11 +113,16 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
 
-    - name: Set Next Version
+    - name: Set Next Version for main branch
       shell: bash
       run: |
-        mvn versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${NEXT_VERSION}
+        mvn -B -U -ntp versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${NEXT_VERSION}
         git commit --no-verify -a -m "[CI Skip] Next version v${NEXT_VERSION}"
+        git checkout main
+        git pull origin main
+        git merge "$RELEASE_VERSION"
+        git commit --no-verify -a -m "[CI Skip] Merge ${RELEASE_VERSION} to main"
+        git push origin main 
             
     - name: Release Milestone
       uses: rosestack/milestone-release-action@main
