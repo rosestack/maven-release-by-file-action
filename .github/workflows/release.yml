@@ -6,6 +6,10 @@ on:
       - '.github/project.yml'
     branches:
       - main
+  pull_request:
+    types: [ closed ]
+    paths:
+      - '.github/project.yml'
 
 permissions:
   contents: write
