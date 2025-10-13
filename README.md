@@ -39,7 +39,7 @@ The action automates the following workflow:
 
 * Maven project configured for Maven Central deployment
 * GPG key for signing artifacts
-* Maven Central (OSSRH) account and credentials
+* Maven Central account and credentials
 * GitHub Actions enabled on your repository
 * GitHub token with appropriate permissions
 * `.github/project.yml` file with version information
@@ -52,8 +52,8 @@ Create `.github/project.yml` in your repository:
 
 ```yaml
 release:
-  current-version: "1.0.0"
-  next-version: "1.0.1-SNAPSHOT"
+  current-version: "0.0.1"
+  next-version: "0.0.2-SNAPSHOT"
 ```
 
 ### 2. Configure Secrets
@@ -277,7 +277,7 @@ Your `pom.xml` must include required metadata and plugins for Maven Central depl
   <!-- Project coordinates -->
   <groupId>io.github.yourusername</groupId>
   <artifactId>your-project</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
   
   <!-- Required metadata -->
@@ -398,17 +398,17 @@ Edit `.github/project.yml`:
 
 ```yaml
 release:
-  current-version: "1.0.0"      # Your release version (without -SNAPSHOT)
-  next-version: "1.0.1-SNAPSHOT"  # Next development version
+  current-version: "0.0.1"      # Your release version (without -SNAPSHOT)
+  next-version: "0.0.2-SNAPSHOT"  # Next development version
 ```
 
 ### Step 2: Create Pull Request
 
 ```bash
-git checkout -b release-1.0.0
+git checkout -b release-0.0.1
 git add .github/project.yml
-git commit -m "Prepare release 1.0.0"
-git push origin release-1.0.0
+git commit -m "Prepare release 0.0.1"
+git push origin release-0.0.1
 ```
 
 Create a PR and get it reviewed.
@@ -416,13 +416,13 @@ Create a PR and get it reviewed.
 ### Step 3: Merge and Release
 
 Once the PR is merged to main, the action will automatically:
-1. Create release branch `1.0.0`
-2. Update POM versions to `1.0.0`
+1. Create release branch `0.0.1`
+2. Update POM versions to `0.0.1`
 3. Build and deploy to Maven Central
-4. Create tag `v1.0.0` and GitHub release
+4. Create tag `v0.0.1` and GitHub release
 5. Deploy documentation to GitHub Pages
-6. Update main branch to `1.0.1-SNAPSHOT`
-7. Close milestone `1.0.0` and create `1.0.1-SNAPSHOT`
+6. Update main branch to `0.0.2-SNAPSHOT`
+7. Close milestone `0.0.1` and create `0.0.2-SNAPSHOT`
 
 ## 🔧 Troubleshooting
 

@@ -15,10 +15,10 @@ branding:
 inputs:
   # Maven Central Authentication
   maven-username:
-    description: "Maven Central (OSSRH) username or token"
+    description: "Maven Central username or token"
     required: true
   maven-password:
-    description: "Maven Central (OSSRH) password or token"
+    description: "Maven Central password or token"
     required: true
   maven-server-id:
     description: "Maven server ID for authentication"

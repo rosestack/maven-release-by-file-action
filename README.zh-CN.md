@@ -39,7 +39,7 @@
 
 * 已配置 Maven Central 部署的 Maven 项目
 * 用于签名制品的 GPG 密钥
-* Maven Central (OSSRH) 账户和凭据
+* Maven Central 账户和凭据
 * 启用了 GitHub Actions 的仓库
 * 具有适当权限的 GitHub token
 * 包含版本信息的 `.github/project.yml` 文件
@@ -52,8 +52,8 @@
 
 ```yaml
 release:
-  current-version: "1.0.0"
-  next-version: "1.0.1-SNAPSHOT"
+  current-version: "0.0.1"
+  next-version: "0.0.2-SNAPSHOT"
 ```
 
 ### 2. 配置密钥
@@ -277,7 +277,7 @@ jobs:
   <!-- 项目坐标 -->
   <groupId>io.github.yourusername</groupId>
   <artifactId>your-project</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
   
   <!-- 必需的元数据 -->
@@ -398,17 +398,17 @@ jobs:
 
 ```yaml
 release:
-  current-version: "1.0.0"      # 您的发布版本（不带 -SNAPSHOT）
-  next-version: "1.0.1-SNAPSHOT"  # 下一个开发版本
+  current-version: "0.0.1"      # 您的发布版本（不带 -SNAPSHOT）
+  next-version: "0.0.2-SNAPSHOT"  # 下一个开发版本
 ```
 
 ### 步骤 2：创建 Pull Request
 
 ```bash
-git checkout -b release-1.0.0
+git checkout -b release-0.0.1
 git add .github/project.yml
-git commit -m "Prepare release 1.0.0"
-git push origin release-1.0.0
+git commit -m "Prepare release 0.0.1"
+git push origin release-0.0.1
 ```
 
 创建 PR 并进行审查。
@@ -416,13 +416,13 @@ git push origin release-1.0.0
 ### 步骤 3：合并并发布
 
 一旦 PR 合并到 main，Action 将自动：
-1. 创建发布分支 `1.0.0`
-2. 将 POM 版本更新为 `1.0.0`
+1. 创建发布分支 `0.0.1`
+2. 将 POM 版本更新为 `0.0.1`
 3. 构建并部署到 Maven Central
-4. 创建标签 `v1.0.0` 和 GitHub 发布
+4. 创建标签 `v0.0.1` 和 GitHub 发布
 5. 将文档部署到 GitHub Pages
-6. 将主分支更新为 `1.0.1-SNAPSHOT`
-7. 关闭里程碑 `1.0.0` 并创建 `1.0.1-SNAPSHOT`
+6. 将主分支更新为 `0.0.2-SNAPSHOT`
+7. 关闭里程碑 `0.0.1` 并创建 `0.0.2-SNAPSHOT`
 
 ## 🔧 故障排查
 
