@@ -77,10 +77,6 @@ inputs:
     description: "Path to project metadata file"
     required: false
     default: '.github/project.yml'
-  main-branch:
-    description: "Main branch name"
-    required: false
-    default: 'main'
     
 runs:
   using: 'composite'
@@ -200,10 +196,10 @@ runs:
         mvn ${{ inputs.maven-args }} versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${NEXT_VERSION}
         git commit --no-verify -a -m "[CI Skip] Next version v${NEXT_VERSION}"
         git push origin "$RELEASE_VERSION"
-        git checkout ${{ inputs.main-branch }}
-        git pull origin ${{ inputs.main-branch }}
+        git checkout main
+        git pull origin main
         git merge "$RELEASE_VERSION"
-        git push origin ${{ inputs.main-branch }}
+        git push origin main
             
     - name: Release Milestone
       uses: rosestack/milestone-release-action@main

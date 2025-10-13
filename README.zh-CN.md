@@ -170,7 +170,6 @@ jobs:
 | `deploy-pages`        | 将 Maven 站点部署到 GitHub Pages  | `true`                  |
 | `working-directory`   | Maven 命令的工作目录               | `.`                     |
 | `metadata-file-path`  | 项目元数据文件路径                 | `.github/project.yml`   |
-| `main-branch`         | 主分支名称                        | `main`                  |
 
 ## 💡 使用示例
 
@@ -195,7 +194,6 @@ jobs:
   with:
     # 版本管理
     metadata-file-path: '.github/project.yml'
-    main-branch: 'main'
     
     # Java 配置
     java-version: '17'
@@ -528,5 +526,5 @@ Apache License 2.0 - 详见 [LICENSE](LICENSE) 文件。
 
 ---
 
-由 [chensoul](https://github.com/rosestack) 用 ❤️ 制作
+由 [rosestack](https://github.com/rosestack) 用 ❤️ 制作
 

@@ -24,8 +24,9 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Release Maven Project
-        uses: chensoul/maven-release-by-file-action@main
+        uses: rosestack/maven-release-by-file-action@main
         with:
+          working-directory: 'test-project'
           # Maven Central Authentication (Required)
           maven-username: ${{ secrets.MAVEN_USERNAME }}
           maven-password: ${{ secrets.MAVEN_PASSWORD }}

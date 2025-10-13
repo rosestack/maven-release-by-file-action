@@ -170,7 +170,6 @@ jobs:
 | `deploy-pages`       | Deploy Maven site to GitHub Pages        | `true`               |
 | `working-directory`  | Working directory for Maven commands     | `.`                  |
 | `metadata-file-path` | Path to project metadata file            | `.github/project.yml`|
-| `main-branch`        | Main branch name                         | `main`               |
 
 ## 💡 Usage Examples
 
@@ -195,7 +194,6 @@ jobs:
   with:
     # Version Management
     metadata-file-path: '.github/project.yml'
-    main-branch: 'main'
     
     # Java Configuration
     java-version: '17'
@@ -528,4 +526,4 @@ If you find this project useful, please consider giving it a star ⭐️
 
 ---
 
-Made with ❤️ by [chensoul](https://github.com/rosestack)
+Made with ❤️ by [rosestack](https://github.com/rosestack)
