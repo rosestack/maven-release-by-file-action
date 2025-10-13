@@ -54,5 +54,4 @@ jobs:
           # Optional: Advanced Options
           # working-directory: '.'
           # metadata-file-path: '.github/project.yml'
-          # main-branch: 'main'
 
