@@ -18,8 +18,8 @@
 
 release:
   # The version to be released (without -SNAPSHOT suffix)
-  current-version: "1.0.0"
+  current-version: "0.0.1"
   
   # The next development version (with -SNAPSHOT suffix)
-  next-version: "1.0.1-SNAPSHOT"
+  next-version: "0.0.2-SNAPSHOT"
 
