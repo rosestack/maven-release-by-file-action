@@ -1,5 +1,5 @@
 name: 'Maven Release by File Action'
-description: 'Complete environment configuration for Maven Release by File Action'
+description: 'Automate Maven project releases with version management from .github/project.yml file'
 
 ##
 ## Automates the release process
@@ -9,25 +9,78 @@ description: 'Complete environment configuration for Maven Release by File Actio
 ## 4. trigger this action: create release branch, create tag and release, set next version and merge to main, Release Milestone
 
 branding:
-  icon: 'settings'
-  color: 'green'
+  icon: 'package'
+  color: 'blue'
 
 inputs:
-  gpg-secret-key:
-    description: "GPG secret key"
+  # Maven Central Authentication
+  maven-username:
+    description: "Maven Central (OSSRH) username or token"
+    required: true
+  maven-password:
+    description: "Maven Central (OSSRH) password or token"
+    required: true
+  maven-server-id:
+    description: "Maven server ID for authentication"
+    required: false
+    default: 'central'
+    
+  # GPG Signing
+  gpg-private-key:
+    description: "GPG private key for signing artifacts"
     required: true
   gpg-passphrase:
-    description: "GPG passphrase"
+    description: "GPG passphrase for the private key"
     required: true
-  ossrh-username:
-    description: "OSSRH username"
-    required: true
-  ossrh-password:
-    description: "OSSRH password"
-    required: true
+    
+  # GitHub Configuration
   github-token:
-    description: "GitHub token"
+    description: "GitHub token with write permissions"
     required: true
+    
+  # Java Configuration
+  java-version:
+    description: "Java version to use"
+    required: false
+    default: '8'
+  java-distribution:
+    description: "Java distribution to use (temurin, zulu, adopt, etc.)"
+    required: false
+    default: 'temurin'
+    
+  # Maven Configuration
+  maven-args:
+    description: "Additional Maven arguments"
+    required: false
+    default: '-B -U -ntp'
+  maven-profiles:
+    description: "Maven profiles to activate (comma-separated)"
+    required: false
+    default: 'central'
+    
+  # Build Options
+  skip-tests:
+    description: "Skip running tests during deployment"
+    required: false
+    default: 'false'
+  deploy-pages:
+    description: "Deploy Maven site to GitHub Pages"
+    required: false
+    default: 'true'
+    
+  # Advanced Options
+  working-directory:
+    description: "Working directory for Maven commands"
+    required: false
+    default: '.'
+  metadata-file-path:
+    description: "Path to project metadata file"
+    required: false
+    default: '.github/project.yml'
+  main-branch:
+    description: "Main branch name"
+    required: false
+    default: 'main'
     
 runs:
   using: 'composite'
@@ -38,7 +91,7 @@ runs:
       id: metadata
       with:
         github-token: ${{ inputs.github-token }}
-        metadata-file-path: '.github/project.yml'
+        metadata-file-path: ${{ inputs.metadata-file-path }}
 
     - name: Set environment variables
       shell: bash
@@ -57,18 +110,19 @@ runs:
       uses: actions/checkout@v4
       with:
         token: ${{ inputs.github-token }}
+        fetch-depth: 0
 
-    - name: Set up Java 8
+    - name: Set up Java
       uses: actions/setup-java@v4
       with:
-        java-version: '8'
-        distribution: 'temurin'
+        java-version: ${{ inputs.java-version }}
+        distribution: ${{ inputs.java-distribution }}
         cache: maven
-        server-id: central
+        server-id: ${{ inputs.maven-server-id }}
         server-username: MAVEN_USERNAME
         server-password: MAVEN_PASSWORD
         gpg-passphrase: MAVEN_GPG_PASSPHRASE
-        gpg-private-key: ${{ inputs.gpg-secret-key }} # macOS: gpg --armor --export-secret-key
+        gpg-private-key: ${{ inputs.gpg-private-key }}
 
     - name: Configure Git User
       shell: bash
@@ -78,47 +132,78 @@ runs:
 
     - name: Create Release branch
       shell: bash
+      working-directory: ${{ inputs.working-directory }}
       run: |
         git checkout -b "$RELEASE_VERSION"
-        mvn -B -U -ntp versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${RELEASE_VERSION}
-        sed -i "s|<version>[0-9]\+\.[0-9]\+\.[0-9]\+</version>|<version>${RELEASE_VERSION}</version>|g" README.md
+        mvn ${{ inputs.maven-args }} versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${RELEASE_VERSION}
+        if [ -f README.md ]; then
+          sed -i.bak "s|<version>[0-9]\+\.[0-9]\+\.[0-9]\+</version>|<version>${RELEASE_VERSION}</version>|g" README.md
+          rm -f README.md.bak
+        fi
         git commit --no-verify -a -m "[CI Skip] Releasing branch ${RELEASE_VERSION}"
         git push origin "$RELEASE_VERSION"
 
     - name: Deploy to Maven Central
       shell: bash
+      working-directory: ${{ inputs.working-directory }}
       run: |
-        mvn -B -U -ntp deploy site site:stage -DskipTests -Pcentral
+        SKIP_TESTS_FLAG=""
+        if [ "${{ inputs.skip-tests }}" = "true" ]; then
+          SKIP_TESTS_FLAG="-DskipTests"
+        fi
+        
+        DEPLOY_PAGES_TARGETS=""
+        if [ "${{ inputs.deploy-pages }}" = "true" ]; then
+          DEPLOY_PAGES_TARGETS="site site:stage"
+        fi
+        
+        PROFILES=""
+        if [ -n "${{ inputs.maven-profiles }}" ]; then
+          PROFILES="-P${{ inputs.maven-profiles }}"
+        fi
+        
+        mvn ${{ inputs.maven-args }} deploy $DEPLOY_PAGES_TARGETS $SKIP_TESTS_FLAG $PROFILES
       env:
-        MAVEN_USERNAME: ${{ inputs.ossrh-username }}
-        MAVEN_PASSWORD: ${{ inputs.ossrh-password }}
+        MAVEN_USERNAME: ${{ inputs.maven-username }}
+        MAVEN_PASSWORD: ${{ inputs.maven-password }}
         MAVEN_GPG_PASSPHRASE: ${{ inputs.gpg-passphrase }}
 
     - name: Create Tag and Release
       shell: bash
+      working-directory: ${{ inputs.working-directory }}
       run: |
         git tag -a "v${RELEASE_VERSION}" -m "Release v${RELEASE_VERSION}"
         git push --tags
-        gh release create v${RELEASE_VERSION} --generate-notes target/*.asc target/*.jar target/*.pom
+        
+        # Find artifacts to upload
+        ARTIFACTS=$(find target -type f \( -name "*.jar" -o -name "*.pom" -o -name "*.asc" \) 2>/dev/null | tr '\n' ' ' || echo "")
+        
+        if [ -n "$ARTIFACTS" ]; then
+          gh release create v${RELEASE_VERSION} --generate-notes $ARTIFACTS
+        else
+          gh release create v${RELEASE_VERSION} --generate-notes
+        fi
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
 
     - name: Deploy to GitHub Pages
+      if: inputs.deploy-pages == 'true'
       uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ inputs.github-token }}
-        publish_dir: ./target/staging
+        publish_dir: ${{ inputs.working-directory }}/target/staging
 
     - name: Set Next Version for main branch
       shell: bash
+      working-directory: ${{ inputs.working-directory }}
       run: |
-        mvn -B -U -ntp versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${NEXT_VERSION}
+        mvn ${{ inputs.maven-args }} versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${NEXT_VERSION}
         git commit --no-verify -a -m "[CI Skip] Next version v${NEXT_VERSION}"
         git push origin "$RELEASE_VERSION"
-        git checkout main
-        git pull origin main
+        git checkout ${{ inputs.main-branch }}
+        git pull origin ${{ inputs.main-branch }}
         git merge "$RELEASE_VERSION"
-        git push origin main 
+        git push origin ${{ inputs.main-branch }}
             
     - name: Release Milestone
       uses: rosestack/milestone-release-action@main

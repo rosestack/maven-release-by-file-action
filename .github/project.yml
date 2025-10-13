@@ -1,0 +1,25 @@
+# Maven Release Configuration
+# This file defines the release and next development versions for the project.
+# 
+# Workflow:
+# 1. Edit this file to set current-version and next-version
+# 2. Create a PR with these changes
+# 3. After PR is merged to main, the release action will automatically:
+#    - Create a release branch with current-version
+#    - Build and deploy artifacts to Maven Central
+#    - Create a git tag and GitHub release
+#    - Deploy documentation to GitHub Pages
+#    - Update main branch with next-version
+#    - Close current milestone and create next milestone
+#
+# Version format:
+# - current-version: Must NOT contain -SNAPSHOT (e.g., "1.0.0")
+# - next-version: Must contain -SNAPSHOT (e.g., "1.0.1-SNAPSHOT")
+
+release:
+  # The version to be released (without -SNAPSHOT suffix)
+  current-version: "1.0.0"
+  
+  # The next development version (with -SNAPSHOT suffix)
+  next-version: "1.0.1-SNAPSHOT"
+
