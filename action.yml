@@ -42,7 +42,7 @@ inputs:
   java-version:
     description: "Java version to use"
     required: false
-    default: '8'
+    default: '17'
   java-distribution:
     description: "Java distribution to use (temurin, zulu, adopt, etc.)"
     required: false

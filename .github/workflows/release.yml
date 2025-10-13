@@ -43,7 +43,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           
           # Optional: Java Configuration
-          # java-version: '8'
+          # java-version: '17'
           # java-distribution: 'temurin'
           
           # Optional: Maven Configuration

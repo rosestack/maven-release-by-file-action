@@ -163,7 +163,7 @@ jobs:
 
 | 输入参数                | 描述                              | 默认值                   |
 |-----------------------|----------------------------------|-------------------------|
-| `java-version`        | 要使用的 Java 版本                | `8`                     |
+| `java-version`        | 要使用的 Java 版本                | `17`                    |
 | `java-distribution`   | Java 发行版 (temurin, zulu 等)    | `temurin`               |
 | `maven-args`          | 额外的 Maven 参数                 | `-B -U -ntp`            |
 | `maven-profiles`      | 要激活的 Maven 配置文件            | `central`               |
@@ -470,26 +470,6 @@ git push origin release-0.0.1
 * 下一个版本必须包含 `-SNAPSHOT`
 * 遵循语义化版本：`MAJOR.MINOR.PATCH`
 
-## 📊 与类似 Actions 的比较
-
-### vs. maven-release-by-file-action
-
-| 功能 | maven-release-by-file-action | maven-release-by-file-action |
-|------|------------------------------|-------------------------------|
-| 版本输入 | 基于文件 (`.github/project.yml`) | 手动 workflow_dispatch |
-| 自动化 | 合并时完全自动化 | 手动触发 |
-| 适用于 | CI/CD 流水线 | 按需发布 |
-| PR 审查 | 是，审查版本变更 | 不涉及 PR |
-
-### vs. maven-release-plugin
-
-| 功能 | maven-release-by-file-action | maven-release-plugin |
-|------|------------------------------|---------------------|
-| 平台 | GitHub Actions | 本地 Maven |
-| 自动化 | 完整工作流 | 需要手动步骤 |
-| Git 管理 | 自动化 | 手动命令 |
-| 里程碑管理 | 内置 | 不包含 |
-
 ## 📄 许可证
 
 Apache License 2.0 - 详见 [LICENSE](LICENSE) 文件。
@@ -508,7 +488,6 @@ Apache License 2.0 - 详见 [LICENSE](LICENSE) 文件。
 
 ## 🙏 致谢
 
-* 灵感来自 [maven-release-by-file-action](https://github.com/rosestack/maven-release-by-file-action)
 * 使用 [actions/checkout](https://github.com/actions/checkout)
 * 使用 [actions/setup-java](https://github.com/actions/setup-java)
 * 使用 [peaceiris/actions-gh-pages](https://github.com/peaceiris/actions-gh-pages)

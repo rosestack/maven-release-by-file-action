@@ -163,7 +163,7 @@ jobs:
 
 | Input                | Description                              | Default              |
 |----------------------|------------------------------------------|----------------------|
-| `java-version`       | Java version to use                      | `8`                  |
+| `java-version`       | Java version to use                      | `17`                 |
 | `java-distribution`  | Java distribution (temurin, zulu, etc.)  | `temurin`            |
 | `maven-args`         | Additional Maven arguments               | `-B -U -ntp`         |
 | `maven-profiles`     | Maven profiles to activate               | `central`            |
@@ -470,26 +470,6 @@ Once the PR is merged to main, the action will automatically:
 * Next version MUST contain `-SNAPSHOT`
 * Follow semantic versioning: `MAJOR.MINOR.PATCH`
 
-## 📊 Comparison with Similar Actions
-
-### vs. maven-release-by-file-action
-
-| Feature | maven-release-by-file-action | maven-release-by-file-action |
-|---------|------------------------------|-------------------------------|
-| Version Input | File-based (`.github/project.yml`) | Manual workflow_dispatch |
-| Automation | Fully automated on merge | Manual trigger |
-| Best For | CI/CD pipelines | On-demand releases |
-| PR Review | Yes, review version changes | No PR involved |
-
-### vs. maven-release-plugin
-
-| Feature | maven-release-by-file-action | maven-release-plugin |
-|---------|------------------------------|---------------------|
-| Platform | GitHub Actions | Local Maven |
-| Automation | Complete workflow | Requires manual steps |
-| Git Management | Automated | Manual commands |
-| Milestone Management | Built-in | Not included |
-
 ## 📄 License
 
 Apache License 2.0 - see [LICENSE](LICENSE) file for details.
@@ -508,7 +488,6 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 
 ## 🙏 Acknowledgments
 
-* Inspired by [maven-release-by-file-action](https://github.com/rosestack/maven-release-by-file-action)
 * Uses [actions/checkout](https://github.com/actions/checkout)
 * Uses [actions/setup-java](https://github.com/actions/setup-java)
 * Uses [peaceiris/actions-gh-pages](https://github.com/peaceiris/actions-gh-pages)
