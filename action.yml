@@ -132,12 +132,16 @@ runs:
       run: |
         git checkout -b "$RELEASE_VERSION"
         mvn ${{ inputs.maven-args }} versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${RELEASE_VERSION}
-        if [ -f README.md ]; then
-          sed -i.bak "s|<version>[0-9]\+\.[0-9]\+\.[0-9]\+</version>|<version>${RELEASE_VERSION}</version>|g" README.md
-          rm -f README.md.bak
+        
+        # Check if there are changes to commit
+        if [ -n "$(git status --porcelain)" ]; then
+          git add .
+          git commit --no-verify -m "[CI Skip] Releasing branch ${RELEASE_VERSION}"
+          git push origin "$RELEASE_VERSION"
+        else
+          echo "No changes to commit"
+          git push origin "$RELEASE_VERSION"
         fi
-        git commit --no-verify -a -m "[CI Skip] Releasing branch ${RELEASE_VERSION}"
-        git push origin "$RELEASE_VERSION"
 
     - name: Deploy to Maven Central
       shell: bash
@@ -194,7 +198,15 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       run: |
         mvn ${{ inputs.maven-args }} versions:set -DprocessAllModules=true -DgenerateBackupPoms=false -DnewVersion=${NEXT_VERSION}
-        git commit --no-verify -a -m "[CI Skip] Next version v${NEXT_VERSION}"
+        
+        # Check if there are changes to commit
+        if [ -n "$(git status --porcelain)" ]; then
+          git add .
+          git commit --no-verify -m "[CI Skip] Next version v${NEXT_VERSION}"
+        else
+          echo "No changes to commit for next version"
+        fi
+        
         git push origin "$RELEASE_VERSION"
         git checkout main
         git pull origin main
