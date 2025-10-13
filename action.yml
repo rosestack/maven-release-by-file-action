@@ -95,12 +95,23 @@ runs:
         echo "RELEASE_VERSION=${{ steps.metadata.outputs.release-version }}" >> $GITHUB_ENV
         echo "NEXT_VERSION=${{ steps.metadata.outputs.next-version }}" >> $GITHUB_ENV
 
-    - name: Validate release version
-      if: contains(env.RELEASE_VERSION, 'SNAPSHOT')
-      shell: bash  
+    - name: Validate inputs
+      shell: bash
       run: |
-        echo '::error::Cannot release a SNAPSHOT version.'
-        exit 1
+        # Validate release version is not SNAPSHOT
+        if [[ "$RELEASE_VERSION" == *"SNAPSHOT"* ]]; then
+          echo "::error::Cannot release a SNAPSHOT version: $RELEASE_VERSION"
+          exit 1
+        fi
+        
+        # Validate working directory exists
+        if [[ "${{ inputs.working-directory }}" != "." ]]; then
+          if [[ ! -d "${{ inputs.working-directory }}" ]]; then
+            echo "::error::Working directory not found: ${{ inputs.working-directory }}"
+            exit 1
+          fi
+          echo "📁 Working directory: ${{ inputs.working-directory }}"
+        fi
         
     - name: Checkout Source
       uses: actions/checkout@v4
