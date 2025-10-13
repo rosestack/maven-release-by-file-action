@@ -1,7 +1,9 @@
 # Maven Release by File Action
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![GitHub Release](https://img.shields.io/github/release/rosestack/maven-release-by-file-action.svg)](https://github.com/rosestack/maven-release-by-file-action/releases)
+[![GitHub release](https://img.shields.io/github/v/release/rosestack/maven-release-by-file-action)](https://github.com/rosestack/maven-release-by-file-action/releases)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/rosestack/maven-release-by-file-action/ci.yml?branch=main)](https://github.com/rosestack/maven-release-by-file-action/actions/workflows/test.yml)
+[![License](https://img.shields.io/github/license/rosestack/maven-release-by-file-action)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/rosestack/maven-release-by-file-action)](https://github.com/rosestack/maven-release-by-file-action/stargazers)
 
 A comprehensive GitHub Actions workflow for automating Maven project releases with version management driven by `.github/project.yml` file. This action streamlines the entire release process from branch creation to Maven Central deployment and documentation publishing.
 
@@ -470,9 +472,9 @@ Once the PR is merged to main, the action will automatically:
 
 ## 📊 Comparison with Similar Actions
 
-### vs. maven-release-by-manual-action
+### vs. maven-release-by-file-action
 
-| Feature | maven-release-by-file-action | maven-release-by-manual-action |
+| Feature | maven-release-by-file-action | maven-release-by-file-action |
 |---------|------------------------------|-------------------------------|
 | Version Input | File-based (`.github/project.yml`) | Manual workflow_dispatch |
 | Automation | Fully automated on merge | Manual trigger |
@@ -506,7 +508,7 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 
 ## 🙏 Acknowledgments
 
-* Inspired by [maven-release-by-manual-action](https://github.com/rosestack/maven-release-by-manual-action)
+* Inspired by [maven-release-by-file-action](https://github.com/rosestack/maven-release-by-file-action)
 * Uses [actions/checkout](https://github.com/actions/checkout)
 * Uses [actions/setup-java](https://github.com/actions/setup-java)
 * Uses [peaceiris/actions-gh-pages](https://github.com/peaceiris/actions-gh-pages)

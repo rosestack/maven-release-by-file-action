@@ -1,7 +1,9 @@
 # Maven Release by File Action
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![GitHub Release](https://img.shields.io/github/release/rosestack/maven-release-by-file-action.svg)](https://github.com/rosestack/maven-release-by-file-action/releases)
+[![GitHub release](https://img.shields.io/github/v/release/rosestack/maven-release-by-file-action)](https://github.com/rosestack/maven-release-by-file-action/releases)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/rosestack/maven-release-by-file-action/ci.yml?branch=main)](https://github.com/rosestack/maven-release-by-file-action/actions/workflows/test.yml)
+[![License](https://img.shields.io/github/license/rosestack/maven-release-by-file-action)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/rosestack/maven-release-by-file-action)](https://github.com/rosestack/maven-release-by-file-action/stargazers)
 
 一个功能完整的 GitHub Actions 工作流，用于自动化 Maven 项目发布，通过 `.github/project.yml` 文件管理版本。此 Action 简化了从分支创建到 Maven Central 部署和文档发布的整个发布流程。
 
@@ -470,9 +472,9 @@ git push origin release-0.0.1
 
 ## 📊 与类似 Actions 的比较
 
-### vs. maven-release-by-manual-action
+### vs. maven-release-by-file-action
 
-| 功能 | maven-release-by-file-action | maven-release-by-manual-action |
+| 功能 | maven-release-by-file-action | maven-release-by-file-action |
 |------|------------------------------|-------------------------------|
 | 版本输入 | 基于文件 (`.github/project.yml`) | 手动 workflow_dispatch |
 | 自动化 | 合并时完全自动化 | 手动触发 |
@@ -506,7 +508,7 @@ Apache License 2.0 - 详见 [LICENSE](LICENSE) 文件。
 
 ## 🙏 致谢
 
-* 灵感来自 [maven-release-by-manual-action](https://github.com/rosestack/maven-release-by-manual-action)
+* 灵感来自 [maven-release-by-file-action](https://github.com/rosestack/maven-release-by-file-action)
 * 使用 [actions/checkout](https://github.com/actions/checkout)
 * 使用 [actions/setup-java](https://github.com/actions/setup-java)
 * 使用 [peaceiris/actions-gh-pages](https://github.com/peaceiris/actions-gh-pages)

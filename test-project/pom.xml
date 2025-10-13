@@ -70,7 +70,7 @@
     <distributionManagement>
         <site>
             <id>github</id>
-            <url>https://github.com/chensoul/maven-release-by-file-action/test-project</url>
+            <url>https://github.com/rosestack/maven-release-by-file-action/test-project</url>
         </site>
     </distributionManagement>
 
