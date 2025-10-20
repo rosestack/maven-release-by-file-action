@@ -15,7 +15,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests -B
 
 # 运行阶段 - 使用更小的基础镜像
-FROM openjdk:11-slim
+FROM openjdk:11.0.16-slim
 
 # 安装必要的包并创建非 root 用户
 RUN apt-get update && apt-get install -y --no-install-recommends wget curl && \
