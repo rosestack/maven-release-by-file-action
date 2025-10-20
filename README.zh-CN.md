@@ -162,16 +162,16 @@ jobs:
 ### 可选输入
 
 | 输入参数                | 描述                              | 默认值                   |
-|-----------------------|----------------------------------|-------------------------|
-| `java-version`        | 要使用的 Java 版本                | `17`                    |
-| `java-distribution`   | Java 发行版 (temurin, zulu 等)    | `temurin`               |
-| `maven-args`          | 额外的 Maven 参数                 | `-B -U -ntp`            |
-| `maven-profiles`      | 要激活的 Maven 配置文件            | `central`               |
-| `maven-server-id`     | 用于身份验证的 Maven 服务器 ID     | `central`               |
-| `skip-tests`          | 跳过运行测试                      | `false`                 |
-| `deploy-pages`        | 将 Maven 站点部署到 GitHub Pages  | `true`                  |
-| `working-directory`   | Maven 命令的工作目录               | `.`                     |
-| `metadata-file-path`  | 项目元数据文件路径                 | `.github/project.yml`   |
+|-----------------------|----------------------------------|-----------------------|
+| `java-version`        | 要使用的 Java 版本                | `17`                  |
+| `java-distribution`   | Java 发行版 (temurin, zulu 等)    | `temurin`             |
+| `maven-args`          | 额外的 Maven 参数                 | `-B -U -ntp`          |
+| `maven-profiles`      | 要激活的 Maven 配置文件            | `release`             |
+| `maven-server-id`     | 用于身份验证的 Maven 服务器 ID     | `central`             |
+| `skip-tests`          | 跳过运行测试                      | `false`               |
+| `deploy-pages`        | 将 Maven 站点部署到 GitHub Pages  | `true`                |
+| `working-directory`   | Maven 命令的工作目录               | `.`                   |
+| `metadata-file-path`  | 项目元数据文件路径                 | `.github/project.yml` |
 
 ## 💡 使用示例
 
@@ -215,7 +215,7 @@ jobs:
     
     # 构建选项
     maven-args: '-B -U -ntp -T 1C'
-    maven-profiles: 'central'
+    maven-profiles: 'release'
     skip-tests: 'false'
     deploy-pages: 'true'
     
@@ -314,10 +314,6 @@ jobs:
   
   <!-- 分发管理 -->
   <distributionManagement>
-    <repository>
-      <id>central</id>
-      <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
     <snapshotRepository>
       <id>central</id>
       <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
@@ -337,7 +333,7 @@ jobs:
   <!-- 配置文件 -->
   <profiles>
     <profile>
-      <id>central</id>
+      <id>release</id>
       <build>
         <plugins>
           <!-- GPG 插件 -->

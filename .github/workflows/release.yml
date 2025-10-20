@@ -48,7 +48,7 @@ jobs:
           
           # Optional: Maven Configuration
           # maven-args: '-B -U -ntp'
-          # maven-profiles: 'central'
+          # maven-profiles: 'release'
           # maven-server-id: 'central'
           
           # Optional: Build Options

@@ -56,7 +56,7 @@ inputs:
   maven-profiles:
     description: "Maven profiles to activate (comma-separated)"
     required: false
-    default: 'central'
+    default: 'release'
     
   # Build Options
   skip-tests:

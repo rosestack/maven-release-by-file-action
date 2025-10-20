@@ -166,7 +166,7 @@ jobs:
 | `java-version`       | Java version to use                      | `17`                 |
 | `java-distribution`  | Java distribution (temurin, zulu, etc.)  | `temurin`            |
 | `maven-args`         | Additional Maven arguments               | `-B -U -ntp`         |
-| `maven-profiles`     | Maven profiles to activate               | `central`            |
+| `maven-profiles`     | Maven profiles to activate               | `release`            |
 | `maven-server-id`    | Maven server ID for authentication       | `central`            |
 | `skip-tests`         | Skip running tests                       | `false`              |
 | `deploy-pages`       | Deploy Maven site to GitHub Pages        | `true`               |
@@ -215,7 +215,7 @@ jobs:
     
     # Build Options
     maven-args: '-B -U -ntp -T 1C'
-    maven-profiles: 'central'
+    maven-profiles: 'release'
     skip-tests: 'false'
     deploy-pages: 'true'
     
@@ -314,10 +314,6 @@ Your `pom.xml` must include required metadata and plugins for Maven Central depl
   
   <!-- Distribution Management -->
   <distributionManagement>
-    <repository>
-      <id>central</id>
-      <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
     <snapshotRepository>
       <id>central</id>
       <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
@@ -337,7 +333,7 @@ Your `pom.xml` must include required metadata and plugins for Maven Central depl
   <!-- Profiles -->
   <profiles>
     <profile>
-      <id>central</id>
+      <id>release</id>
       <build>
         <plugins>
           <!-- GPG Plugin -->
